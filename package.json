@@ -1,0 +1,17 @@
+{
+  "name": "parcel_project",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "parcel src/index.html --port 3000",
+    "build": "parcel build src/index.html"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@parcel/transformer-sass": "^2.16.0",
+    "parcel": "^2.16.0",
+    "sass": "^1.93.2",
+    "typescript": "^5.9.2"
+  }
+}
