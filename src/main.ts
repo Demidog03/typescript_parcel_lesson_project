@@ -127,8 +127,169 @@
 //
 // multiply(10)
 
-function sayHello(name: unknown): void {
-    console.log(`Hello, ${name}`)
+// function sayHello(name: unknown): void {
+//     console.log(`Hello, ${name}`)
+// }
+//
+// sayHello(true)
+
+// const numbers = [1, 2, 3, 4, 5]
+// const numbersClone = numbers.map(el => {
+//     return el
+// })
+// const numbersCloneChanged = numbers.map(el => {
+//     return el * 2
+// })
+//
+// console.log(numbers)
+// console.log(numbersClone)
+// console.log(numbersCloneChanged)
+//
+// map(arr, func)
+
+// 1
+// any - абсолютно все что угодно (делай что хочешь)
+// unknown - пока не знаю что за типы, но когда буду знать буду ругаться
+// function customMap(arr: any[], callbackFn: (element: any) => any): any[] {
+//     const newArr = []
+//     for (const el of arr) {
+//         newArr.push(callbackFn(el)) // newArr.push(el * 2)
+//     }
+//     return newArr
+// }
+//
+// const numbers = [1, 2, 3, 4, 5]
+// const newNumbers = customMap(numbers, (el) => {
+//     return el * 2
+// })
+//
+// console.log(numbers)
+// console.log(newNumbers)
+
+// type CallbackArrayFunc = (element: unknown) => unknown
+// () => (тип данных которую возвращает функция)
+
+// 2
+// function customMap(arr, callbackFn) {
+//     const newArr = []
+//     for (const el of arr) {
+//         newArr.push(callbackFn(el))
+//     }
+//     return newArr
+// }
+
+
+// Array.prototype.customMap = function (callbackFn) {
+//     const newArr = []
+//     for (const el of this) {
+//         newArr.push(callbackFn(el))
+//     }
+//     return newArr
+// }
+//
+// const numbers = [1, 2, 3, 4, 5]
+// const newNumbers = numbers.customMap(el => {
+//     return el * 2
+// })
+//
+// console.log(numbers)
+// console.log(newNumbers)
+
+// Создать кастомный reduce()
+
+// КЛАССЫ И ИНТЕРФЕЙСЫ
+// type Car = {
+//     model: string
+//     color: string
+// }
+//
+// type CarWithEngine = {
+//     engine: string
+// } & Car
+
+// interface Car {
+//     model: string
+//     color: string
+// }
+//
+// interface CarWithEngine extends Car {
+//     engine: string
+// }
+//
+// const car1: CarWithEngine = {
+//
+// }
+
+// interface DogInterface {
+//     name: string
+//     bark: () => void
+// }
+//
+// class Dog implements DogInterface{
+//     name: string
+//
+//     constructor(name: string) {
+//         this.name = name
+//     }
+//
+//     bark(): void {
+//         console.log(`Woof!`)
+//     }
+// }
+//
+// const dog = new Dog('Max')
+// console.log(dog)
+// dog.bark()
+
+// const dog: DogInterface = {
+//     name: 'Max',
+//     bark: () => {
+//         console.log(`Woof!`)
+//     },
+//     age: 12
+
+// }
+
+interface BankAccountInterface {
+    deposit(amount: number): void
+    withdraw(amount: number): void
+    showBalance(): void
 }
 
-sayHello(true)
+class BankAccount implements BankAccountInterface {
+    private balance: number = 0
+
+    deposit(amount: number): void {
+        this.addBalance(amount)
+        this.balance = this.balance + amount
+        console.log(`Начислено ${amount}$`)
+        this.showBalance()
+    }
+    withdraw(amount: number): void {
+        this.decreaseBalance(amount)
+        this.balance = this.balance - amount
+        console.log(`Снятие ${amount}$`)
+        this.showBalance()
+    }
+    showBalance(): void {
+        console.log(`Текущий баланс: ${this.balance}$`)
+    }
+
+    private addBalance(amount: number) {
+        this.balance = this.balance + amount
+    }
+    private decreaseBalance(amount: number) {
+        if (amount > this.balance) {
+            console.log('Недостаточно средств')
+            return
+        }
+        this.balance = this.balance - amount
+    }
+}
+
+
+const bankAccount = new BankAccount()
+bankAccount.deposit(100)
+bankAccount.withdraw(20)
+
+bankAccount.showBalance()
