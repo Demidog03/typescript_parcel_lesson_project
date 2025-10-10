@@ -1,18 +1,19 @@
+import {v4 as uuidv4} from '../../node_modules/uuid/dist'
 import {TaskRepositoryInterface, UpdateTaskPayload} from "./TaskRepositoryInterface";
 import {Task} from "../models/TaskModel";
 
+// Repository - Откуда получать данные и что с ними можно делать
 export default class LocalStorageTaskRepository implements TaskRepositoryInterface {
     constructor() {}
 
-    // Домашнее задание
-    // get(id: number): Task {
-    //
-    // }
-
-    getAll(): Task[] {
+    get(id: string) {
+        const tasks = this.getParsedTasks()
+        return tasks.find(task => task.id === id)
+    }
+    getAll() {
         return this.getParsedTasks()
     }
-    add(newTask: Task): void {
+    add(title: string) {
         // localStorage.getItem('tasks') => "[{ "id": 1, "title": "Task 1" }, { "id": 2, "title": "Task 2" }]"
         // JSON.parse() => [{ "id": 1, "title": "Task 1" }, { "id": 2, "title": "Task 2" }]
         // localStorage.getItem('tasks') === null => '[]'
@@ -20,11 +21,10 @@ export default class LocalStorageTaskRepository implements TaskRepositoryInterfa
         // tasks = [{ "id": 1, "title": "Task 1" }, { "id": 2, "title": "Task 2" }, { "id": 3, "title": "Task 3" }]
         // updatedTasksJson => JSON.stringify(tasks) => "[{ "id": 1, "title": "Task 1" }, { "id": 2, "title": "Task 2" }, { "id": 3, "title": "Task 3" }]"
         // localStorage.setItem('tasks', updatedTasksJson) => "[{ "id": 1, "title": "Task 1" }, { "id": 2, "title": "Task 2" }, { "id": 3, "title": "Task 3" }]"
-        const tasks: Task[] = this.getParsedTasks()
-        const isTaskExists: boolean = tasks.some((task) => task.id === newTask.id)
-
-        if (isTaskExists) {
-            return
+        const tasks = this.getParsedTasks()
+        const newTask: Task = {
+            id: uuidv4(),
+            title,
         }
 
         tasks.push(newTask)
@@ -37,7 +37,7 @@ export default class LocalStorageTaskRepository implements TaskRepositoryInterfa
         // java -> hashmap
         // c# -> dictionary
     }
-    remove(id: number): void {
+    remove(id: string) {
         const tasks = this.getParsedTasks()
         const hasDeletingTask = tasks.some((task) => task.id === id)
 
@@ -49,7 +49,7 @@ export default class LocalStorageTaskRepository implements TaskRepositoryInterfa
         const updatedTasks = tasks.filter(task => task.id !== id)
         localStorage.setItem('tasks', this.getStringifiedItem(updatedTasks))
     }
-    update(id: number, newTaskPayload: UpdateTaskPayload): void {
+    update(id: string, newTaskPayload: UpdateTaskPayload) {
         const tasks = this.getParsedTasks()
         const taskToUpdate = tasks.find(task => task.id === id)
 

@@ -1,17 +1,17 @@
 import LocalStorageTaskRepository from './repositories/LocalStorageTaskRepository'
+import TaskService from './service/TaskService'
 
-// instance -> экземпляр
+const taskContainer = document.getElementById('taskContainer')
+const taskInput: HTMLInputElement | null = document.getElementById('taskInput') as HTMLInputElement
+const taskAddBtn = document.getElementById('taskAddBtn')
+
 const localStorageTaskRepository = new LocalStorageTaskRepository()
+const taskService = new TaskService(taskContainer, localStorageTaskRepository, taskInput, taskAddBtn)
 
-// localStorageTaskRepository.add({ id: 3, title: 'Task 3' })
-// console.log(localStorageTaskRepository.getAll())
-// localStorageTaskRepository.remove(4)
-// localStorageTaskRepository.update(3, { title: 'Учить Next.js' })
+taskService.renderTasks()
+taskService.createAddTaskEvent()
 
-
-// CRUD операции
-
-// CREATE -> add() -> post запрос
-// READ -> getAll() -> get запрос
-// UPDATE -> update() -> put/patch запрос
-// DELETE/DESTROY -> remove() -> delete запрос
+// MVC
+// Model - TaskModel
+// View - TaskComponent
+// Controller - main.ts
