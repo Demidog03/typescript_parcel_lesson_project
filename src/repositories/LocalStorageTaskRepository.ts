@@ -13,6 +13,12 @@ export default class LocalStorageTaskRepository implements TaskRepositoryInterfa
     getAll() {
         return this.getParsedTasks()
     }
+    getDoneTasks() {
+        return this.getParsedTasks().filter(t => t.isDone)
+    }
+    getCurrentTasks() {
+        return this.getParsedTasks().filter(t => !t.isDone)
+    }
     add(title: string) {
         // localStorage.getItem('tasks') => "[{ "id": 1, "title": "Task 1" }, { "id": 2, "title": "Task 2" }]"
         // JSON.parse() => [{ "id": 1, "title": "Task 1" }, { "id": 2, "title": "Task 2" }]
@@ -25,6 +31,7 @@ export default class LocalStorageTaskRepository implements TaskRepositoryInterfa
         const newTask: Task = {
             id: uuidv4(),
             title,
+            isDone: false,
         }
 
         tasks.push(newTask)
@@ -49,7 +56,7 @@ export default class LocalStorageTaskRepository implements TaskRepositoryInterfa
         const updatedTasks = tasks.filter(task => task.id !== id)
         localStorage.setItem('tasks', this.getStringifiedItem(updatedTasks))
     }
-    update(id: string, newTaskPayload: UpdateTaskPayload) {
+    updateTitle(id: string, newTaskPayload: UpdateTaskPayload) {
         const tasks = this.getParsedTasks()
         const taskToUpdate = tasks.find(task => task.id === id)
 
@@ -59,6 +66,18 @@ export default class LocalStorageTaskRepository implements TaskRepositoryInterfa
         }
 
         taskToUpdate.title = newTaskPayload.title
+        localStorage.setItem('tasks', this.getStringifiedItem(tasks))
+    }
+    updateStatus(id: string, newStatus: boolean) {
+        const tasks = this.getParsedTasks()
+        const taskToUpdate = tasks.find(task => task.id === id)
+
+        if (!taskToUpdate) {
+            console.log('Задача не найдена. Невозможно обновить')
+            return
+        }
+
+        taskToUpdate.isDone = newStatus
         localStorage.setItem('tasks', this.getStringifiedItem(tasks))
     }
 

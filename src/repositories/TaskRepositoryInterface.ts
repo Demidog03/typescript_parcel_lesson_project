@@ -7,7 +7,10 @@ export interface UpdateTaskPayload {
 export interface TaskRepositoryInterface {
     get(id: string): Task | undefined
     getAll(): Task[]
+    getDoneTasks(): Task[]
+    getCurrentTasks(): Task[]
     add(title: string): void
     remove(id: string): void
-    update(id: string, updateTaskPayload: UpdateTaskPayload): void
+    updateTitle(id: string, updateTaskPayload: UpdateTaskPayload): void
+    updateStatus(id: string, newStatus: boolean): void
 }
