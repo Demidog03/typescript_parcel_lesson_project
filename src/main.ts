@@ -18,3 +18,30 @@ localStorageTaskRepository.updateStatus('68bfbcad-d5a0-4d13-bbd3-e4f3108b50f0', 
 // Model - TaskModel
 // View - TaskComponent
 // Controller - main.ts
+
+
+fetch('http://localhost:5000/test')
+    .then(response => response.json())
+    .then(data => {
+      console.log(data)
+    })
+
+fetch('http://localhost:5000/api/tasks')
+    .then(response => response.json())
+    .then(data => {
+      console.log(data)
+    })
+
+fetch('http://localhost:5000/api/tasks/create', {
+  method: 'POST',
+  body: JSON.stringify({
+    title: "Задача 6"
+  }),
+  headers: {
+    "Content-Type": "application/json"
+  }
+})
+    .then(response => response.json())
+    .then(data => {
+      console.log(data)
+    })
