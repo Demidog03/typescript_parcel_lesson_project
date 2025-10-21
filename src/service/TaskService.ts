@@ -1,17 +1,18 @@
 import {TaskRepositoryInterface} from '../repositories/TaskRepositoryInterface'
 import TaskComponent from '../components/TaskComponent'
+import MongoDBTaskRepository from "../repositories/MongoDBTaskRepository";
 
 // Service/Controller - Что и как делать с данными (бизнес логика)
 export default class TaskService {
   private taskContainer: HTMLElement | null
   private taskAddBtn: HTMLElement | null
   private taskInput: HTMLInputElement | null
-  private repository: TaskRepositoryInterface
+  private repository: MongoDBTaskRepository
   private doneTasksContainer: HTMLElement | null
 
   constructor(
       taskContainer: HTMLElement | null,
-      repository: TaskRepositoryInterface,
+      repository: MongoDBTaskRepository,
       taskInput: HTMLInputElement | null,
       taskAddBtn: HTMLElement | null,
       doneTasksContainer: HTMLElement | null
@@ -23,9 +24,9 @@ export default class TaskService {
     this.doneTasksContainer = doneTasksContainer
   }
 
-  renderCurrentTasks() {
+  async renderCurrentTasks() {
     if (this.taskContainer) {
-      const currentTasks = this.repository.getCurrentTasks()
+      const currentTasks = await this.repository.getCurrentTasks()
 
       let currentTasksHtml: HTMLDivElement[] = []
 
@@ -50,9 +51,9 @@ export default class TaskService {
     }
   }
 
-  renderDoneTasks() {
+  async renderDoneTasks() {
     if (this.doneTasksContainer) {
-      const doneTasks = this.repository.getDoneTasks()
+      const doneTasks = await this.repository.getDoneTasks()
 
       let doneTasksHtml: HTMLDivElement[] = []
 
@@ -79,45 +80,32 @@ export default class TaskService {
 
   createAddTaskEvent() {
     if (this.taskAddBtn) {
-      this.taskAddBtn.addEventListener('click', () => {
+      this.taskAddBtn.addEventListener('click', async () => {
         const newTaskTitle = this.taskInput?.value?.trim()
 
         if(newTaskTitle) {
-          this.repository.add(newTaskTitle)
-          this.renderCurrentTasks()
+          await this.repository.add(newTaskTitle)
+          await this.renderCurrentTasks()
         }
       })
     }
   }
 
-  deleteTask(id: string) {
-    this.repository.remove(id)
-
-    const task = this.repository.get(id)
-    if (task?.isDone) {
-      this.renderDoneTasks()
-    }
-    else {
-      this.renderCurrentTasks()
-    }
+  async deleteTask(id: string) {
+      await this.repository.remove(id)
+      await this.renderDoneTasks()
+      await this.renderCurrentTasks()
   }
 
-  updateTask(id: string, newTitle: string) {
-    this.repository.updateTitle(id, { title: newTitle })
-
-    const task = this.repository.get(id)
-    if (task?.isDone) {
-      this.renderDoneTasks()
-    }
-    else {
-      this.renderCurrentTasks()
-    }
+  async updateTask(id: string, newTitle: string) {
+      await this.repository.updateTitle(id, newTitle)
+      await this.renderDoneTasks()
+      await this.renderCurrentTasks()
   }
 
-  updateStatus(id: string, newStatus: boolean) {
-    this.repository.updateStatus(id, newStatus)
-
-    this.renderCurrentTasks()
-    this.renderDoneTasks()
+  async updateStatus(id: string, newStatus: boolean) {
+      await this.repository.updateStatus(id, newStatus)
+      await this.renderCurrentTasks()
+      await this.renderDoneTasks()
   }
 }

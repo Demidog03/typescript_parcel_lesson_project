@@ -6,10 +6,6 @@ import {Task} from "../models/TaskModel";
 export default class LocalStorageTaskRepository implements TaskRepositoryInterface {
     constructor() {}
 
-    get(id: string) {
-        const tasks = this.getParsedTasks()
-        return tasks.find(task => task.id === id)
-    }
     getAll() {
         return this.getParsedTasks()
     }
