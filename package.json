@@ -10,6 +10,7 @@
   "description": "",
   "devDependencies": {
     "@parcel/transformer-sass": "^2.16.0",
+    "@types/node": "^24.9.1",
     "buffer": "^6.0.3",
     "parcel": "^2.16.0",
     "sass": "^1.93.2",
