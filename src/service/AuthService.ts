@@ -32,9 +32,20 @@ export default class AuthService implements AuthServiceInterface {
     }
 
     async register(body: AuthRegisterBody) {
-        const user = await this.repository.register(body)
-        if (user) {
-            this.currentUser = user
+        try {
+            const user = await this.repository.register(body)
+            if (user) {
+                this.currentUser = user
+                window.location.href = '/login?fromRegister=true&registerEmail=' + user.email
+            }
+        }
+        catch (error: AxiosError | Error | unknown) {
+            if (error instanceof AxiosError && error.response?.data?.message) {
+                this.toastService.showError(error.response.data.message)
+            }
+            else {
+                this.toastService.showError("Login failed. Try again.")
+            }
         }
     }
 }
